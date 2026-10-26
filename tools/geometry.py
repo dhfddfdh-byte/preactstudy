@@ -236,6 +236,25 @@ for sec, (pa, pb, n) in SECTIONS.items():
                     p, w = best
                     Q['ref'] = [p, round(w[0], 1), round(w[1], 1), round(w[2], 1), round(w[3], 1)]
                     k = in_passage(p, 0, w[1])
+                    # every line of the underlined phrase carries the number; find each underline
+                    occ = [(p, x) for L in allwords[p] for x in L['words']
+                           if x[4] == str(q) and colof(x[0]) == 0 and (x[3] - x[1]) < 9 and abs(x[1] - w[1]) < 60]
+                    marks = []
+                    for pp, x in occ:
+                        cx = (x[0] + x[2]) / 2
+                        a = img(pp); best_run = None
+                        for yy in range(int((x[1] - 4.5) * S), int((x[1] + 1) * S)):
+                            row = a[yy] < 140; ci = int(cx * S)
+                            if not row[ci - 3:ci + 4].any(): continue
+                            j = ci - 3 + int(np.argmax(row[ci - 3:ci + 4]))
+                            l = j; r = j
+                            while l > int(36 * S) and (row[l - 1] or row[l - 2]): l -= 1
+                            while r < int(300 * S) and (row[r + 1] or row[r + 2]): r += 1
+                            if (r - l) / S > 6 and (best_run is None or r - l > best_run[2] - best_run[1]): best_run = (yy, l, r)
+                        if best_run:
+                            yy, l, r = best_run
+                            marks.append([pp, round(l / S - 1, 1), round(yy / S - 11.5, 1), round(r / S + 1, 1), round(yy / S + 1, 1)])
+                    if marks: Q['marks'] = marks
             if k is None and sec == 'english' and q > 1:
                 k = qs[q - 1]['k']
             if k is None:

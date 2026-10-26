@@ -236,6 +236,12 @@ svg.st.on{color:var(--star)}
 .hlmode .hl-l{cursor:text;touch-action:none}
 .hlmode .hl{cursor:pointer}
 .refbox{position:absolute;border:2px solid var(--sc);border-radius:6px;background:color-mix(in srgb,var(--sc) 18%,transparent);pointer-events:none}
+.uline{position:absolute;border-radius:5px;background:color-mix(in srgb,var(--sc) 20%,transparent);box-shadow:inset 0 -3px 0 var(--sc);pointer-events:none}
+.refhint{display:flex;align-items:center;gap:10px;width:100%;margin:0 0 16px;padding:10px 14px;border:0;border-radius:14px;background:color-mix(in srgb,var(--sc) 12%,var(--surface));color:var(--ink-2);font-size:.9rem;text-align:left;cursor:default}
+.refhint i{width:28px;height:14px;border-radius:4px;background:color-mix(in srgb,var(--sc) 20%,transparent);box-shadow:inset 0 -3px 0 var(--sc);flex:none}
+.refhint b{color:var(--sc)}
+.refhint .go{margin-left:auto;font-weight:700;color:var(--ink);display:none}
+@media (max-width:760px){.refhint{cursor:pointer}.refhint .go{display:inline}}
 .qpane{background:var(--surface)}
 .qin{padding:24px 28px 90px;margin:0 auto;max-width:700px}
 .stage.single .qin{max-width:780px}
@@ -886,6 +892,9 @@ function renderQ(scrollTop){
   const head=document.createElement('div');head.className='qhead';
   head.innerHTML=`<h2>Question ${q}${isTry(s,q)&&R?'<small>N/A, not scored</small>':''}</h2>${R?'':`<div class="tags"><button class="flagbtn xbtn" id="xBtn" aria-pressed="${xMode}">${icon('x')}Cross out</button><button class="flagbtn" id="flagBtn" aria-pressed="${flagged}">${icon('flag')}${flagged?'Flagged':'Flag'}</button></div>`}`;
   I.appendChild(head);
+  if(g.marks&&s==='english'){const hb=document.createElement('button');hb.className='refhint';hb.type='button';
+    hb.innerHTML=`<i></i><span>This question is about the <b>underlined part numbered ${q}</b>, highlighted in the passage.</span><span class="go">Show it</span>`;
+    hb.onclick=()=>{if(MOBILE())setTab('p')};I.appendChild(hb)}
   const crops=[cropEl(g.p,g.stem,scale,'stem')];I.appendChild(crops[0]);
   const box=document.createElement('div');box.className='opts';box.setAttribute('role','radiogroup');box.setAttribute('aria-label',`Answer choices for question ${q}`);
   L4.forEach((L,i)=>{
@@ -928,7 +937,10 @@ function renderPassage(s,g){
     segs.forEach(x=>{const d=cropEl(x[0],x.slice(1),scale);PP.appendChild(d);passageIO.observe(d)});
     pane.scrollTop=0;
   }
-  P.querySelectorAll('.refbox').forEach(e=>e.remove());
+  P.querySelectorAll('.refbox,.uline').forEach(e=>e.remove());
+  for(const [mp,mx0,my0,mx1,my1] of (g.marks||[]))for(const d of P.firstChild.children){const r=d.dataset.r.split(',').map(Number);
+    if(+d.dataset.p!==mp||my1<r[1]||my0>r[3])continue;const sc=+d.dataset.s,u=document.createElement('div');u.className='uline';
+    u.style.cssText=`left:${(mx0-r[0])*sc-3}px;top:${(Math.max(my0,r[1])-r[1])*sc}px;width:${(mx1-mx0)*sc+6}px;height:${(Math.min(my1,r[3])-Math.max(my0,r[1]))*sc}px`;d.appendChild(u)}
   if(g.ref){const [p,x0,y0,x1,y1]=g.ref;
     for(const d of P.firstChild.children){const r=d.dataset.r.split(',').map(Number);
       if(+d.dataset.p!==p||y0<r[1]-1||y1>r[3]+1)continue;
