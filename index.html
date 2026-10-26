@@ -72,11 +72,9 @@ svg.st{width:22px;height:22px;flex:none}
 .iconbtn{width:42px;height:42px;display:grid;place-items:center;border-radius:50%;border:1.5px solid var(--line-2);background:var(--surface);cursor:pointer;color:var(--ink);font-weight:700;font-size:1.1rem}
 .iconbtn:hover{border-color:var(--ink-2)}
 
-/* flag stripes motif */
-.stripes{height:14px;background:linear-gradient(var(--surface) 0 3px,var(--sky) 3px 6px,var(--surface) 6px 8px,var(--sky) 8px 11px,var(--surface) 11px)}
 
 /* ============ home ============ */
-.appbar{background:var(--surface);border-bottom:1px solid var(--line)}
+.appbar{background:var(--surface)}
 .appbar .in{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:12px;padding:14px 24px}
 .logo{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:900;font-size:1.6rem;line-height:1}
 .logo svg.st{width:26px;height:26px;color:var(--star)}
@@ -86,9 +84,36 @@ svg.st{width:22px;height:22px;flex:none}
 .chip.ok .d{background:var(--right)}
 .chip b{color:var(--ink)}
 @media (max-width:420px){.chip .w{display:none}}
+svg.st.off{color:transparent;stroke:var(--star);stroke-width:1.1;stroke-linejoin:round}
+svg.st.on{color:var(--star)}
 
-.wrap{max-width:1200px;margin:0 auto;padding:28px 24px 80px}
-.setup{display:grid;grid-template-columns:1.1fr .9fr;gap:32px;align-items:center;padding:32px;border-radius:24px;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);margin-bottom:28px}
+/* the flag: two sky stripes, a white band of four stars — your four sections */
+.flag{background:var(--surface);border-bottom:1px solid var(--line)}
+.flag .stripe{height:clamp(14px,2.4vw,28px);background:var(--sky)}
+.flag .in{max-width:1200px;margin:0 auto;padding:0 24px}
+.flag .top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:18px 0}
+.flag .hello{font-family:var(--display);font-weight:800;font-size:1.6rem}
+.flag .ttl{display:block;font-family:var(--display);font-weight:900;font-size:clamp(2.4rem,5vw,3.6rem);line-height:1}
+.flag .goal{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.flag .goal b{font-family:var(--display);font-size:1.5rem;font-weight:800}
+.flag .goal .togo{color:var(--muted);font-size:.92rem}
+.flag .mid{display:grid;grid-template-columns:minmax(200px,auto) 1fr;gap:clamp(20px,5vw,72px);align-items:center;padding:clamp(22px,4vw,44px) 0}
+.flag .comp .lab{font-weight:700;color:var(--muted)}
+.flag .comp .big{font-family:var(--display);font-weight:900;font-size:clamp(6.5rem,13vw,10rem);line-height:.8;margin-top:6px}
+.flag .comp .none{font-family:var(--display);font-weight:800;font-size:clamp(1.5rem,2.6vw,1.9rem);line-height:1.05;margin:10px 0 0;max-width:14ch}
+.flag .four{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.flag .s4{display:flex;flex-direction:column;align-items:center;text-align:center;gap:4px}
+.flag .s4 svg.st{width:clamp(52px,8vw,92px);height:clamp(52px,8vw,92px);margin-bottom:6px}
+.flag .s4 .nm{font-weight:700;font-size:.92rem;display:flex;align-items:center;gap:6px}
+.flag .s4 .nm i{width:8px;height:8px;border-radius:50%;background:var(--c)}
+.flag .s4 .v{font-family:var(--display);font-weight:800;font-size:2.4rem;line-height:1}
+.flag .s4 .v.none{color:var(--line-2)}
+.flag .s4 .bm{font-size:.76rem;color:var(--muted)}
+.flag .bot{display:flex;gap:10px 28px;flex-wrap:wrap;padding:14px 0 16px;color:var(--muted);font-size:.9rem}
+.flag .bot b{font-family:var(--display);font-weight:800;font-size:1.35rem;color:var(--ink);margin-right:4px}
+
+.wrap{max-width:1200px;margin:0 auto;padding:32px 24px 80px}
+.setup{display:grid;grid-template-columns:1.1fr .9fr;gap:32px;align-items:center;padding:32px;border-radius:24px;background:var(--surface);border:1px solid var(--line);margin-bottom:32px}
 .setup h1{font-size:clamp(2.6rem,6vw,4.2rem);font-weight:900;margin-bottom:14px}
 .setup p{color:var(--muted);margin:0 0 8px;max-width:52ch}
 .drop{border:2px dashed var(--line-2);border-radius:20px;padding:36px 20px;text-align:center;cursor:pointer;background:var(--surface-2);transition:border-color .15s,background .15s}
@@ -97,7 +122,7 @@ svg.st{width:22px;height:22px;flex:none}
 .drop b{display:block;font-size:1.05rem}
 .drop span{color:var(--muted);font-size:.9rem}
 
-.resume{display:flex;align-items:center;gap:16px;padding:14px 16px 14px 14px;border-radius:999px;background:var(--ink);color:var(--surface);margin-bottom:28px;flex-wrap:wrap}
+.resume{display:flex;align-items:center;gap:16px;padding:14px 16px 14px 14px;border-radius:999px;background:var(--ink);color:var(--surface);margin-bottom:32px;flex-wrap:wrap}
 .resume .ring{width:50px;height:50px;border-radius:50%;background:conic-gradient(var(--sc) calc(var(--p)*1%),rgba(255,255,255,.15) 0);display:grid;place-items:center;flex:none}
 .resume .ring span{width:38px;height:38px;border-radius:50%;background:var(--ink);display:grid;place-items:center;font-family:var(--display);font-weight:800}
 .resume .tx{flex:1;min-width:180px}
@@ -107,19 +132,27 @@ svg.st{width:22px;height:22px;flex:none}
 .resume .btn.ghost{color:var(--surface);opacity:.8}
 .resume .btn.ghost:hover{background:rgba(255,255,255,.1)}
 
-.board{display:grid;grid-template-columns:minmax(260px,.8fr) 1.4fr;gap:0;background:var(--surface);border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow);overflow:hidden;margin-bottom:16px}
-.comp{padding:26px 28px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:12px}
-.comp .lab{font-weight:700;color:var(--muted)}
-.comp .big{font-family:var(--display);font-weight:900;font-size:clamp(6rem,12vw,9rem);line-height:.8;letter-spacing:-.01em}
-.comp .big.none{font-size:3.2rem;color:var(--line-2);line-height:1}
-.goal{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:.95rem}
-.goal b{font-family:var(--display);font-size:1.35rem;font-weight:800}
-.goal .togo{color:var(--muted)}
-.stars{display:flex;gap:14px;margin-top:auto;padding-top:8px}
-.stars .s{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:.74rem;color:var(--muted);font-weight:700}
-.stars svg.st{width:30px;height:30px;color:var(--line-2)}
-.stars .s.on svg.st{color:var(--star)}
-.stars-cap{font-size:.82rem;color:var(--muted)}
+.sh{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin:0 0 6px;flex-wrap:wrap}
+.sh h2{font-size:2.6rem;font-weight:900}
+.sh p{margin:0;color:var(--muted);font-size:.92rem}
+.runs{border-top:3px solid var(--ink);margin-bottom:48px}
+.run{display:grid;grid-template-columns:8px minmax(170px,1.1fr) minmax(190px,1fr) 150px auto;gap:22px;align-items:center;padding:20px 0;border-bottom:1px solid var(--line)}
+.run .bar{align-self:stretch;border-radius:4px;background:var(--c)}
+.run.full .bar{background:linear-gradient(var(--english) 0 25%,var(--math) 25% 50%,var(--reading) 50% 75%,var(--science) 75%)}
+.run h3{font-size:2.5rem;font-weight:900;color:var(--c)}
+.run.full h3{color:var(--ink)}
+.run .meta{color:var(--muted);font-size:.88rem;margin-top:6px}
+.run .redo{margin-top:8px;border:0;background:none;padding:0;color:var(--ink-2);font-weight:700;font-size:.86rem;cursor:pointer;text-decoration:underline;text-decoration-color:var(--c);text-decoration-thickness:2px;text-underline-offset:4px}
+.run .nums{display:flex;gap:22px}
+.run .nums div{font-size:.78rem;color:var(--muted)}
+.run .nums b{display:block;font-family:var(--display);font-weight:800;font-size:2rem;color:var(--ink);line-height:1}
+.run .spark svg{width:150px;height:44px;display:block}
+.run .spark span{font-size:.76rem;color:var(--muted)}
+.run .acts{display:flex;gap:8px}
+.twocol{display:grid;grid-template-columns:1.25fr 1fr;gap:20px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:22px}
+.card > h2{font-size:1.9rem;padding:20px 22px 0}
+.card > .sub{color:var(--muted);font-size:.88rem;padding:6px 22px 0;margin:0}
 .ladder{padding:22px 28px 24px}
 .ladder .axis,.ladder .row{display:grid;grid-template-columns:86px 1fr 54px;gap:14px;align-items:center}
 .ladder .axis{margin-bottom:6px}
@@ -137,46 +170,6 @@ svg.st{width:22px;height:22px;flex:none}
 .ladder .v.none{font-size:1rem;color:var(--muted);font-family:var(--text);font-weight:400}
 .ladder .key{display:flex;gap:16px;margin-top:12px;font-size:.78rem;color:var(--muted);flex-wrap:wrap}
 .ladder .key i{display:inline-block;vertical-align:-2px;margin-right:6px}
-.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:44px;border-top:2px solid var(--ink);border-bottom:1px solid var(--line)}
-.stat{padding:14px 18px 16px;border-left:1px solid var(--line)}
-.stat:first-child{border-left:0;padding-left:0}
-.stat b{display:block;font-family:var(--display);font-weight:800;font-size:2.2rem;line-height:1}
-.stat span{font-size:.84rem;color:var(--muted)}
-
-.sh{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin:0 0 16px;flex-wrap:wrap}
-.sh h2{font-size:2.3rem}
-.sh p{margin:0;color:var(--muted);font-size:.92rem}
-.full{display:flex;align-items:center;gap:24px;padding:24px 26px;border-radius:24px;background:var(--ink);color:var(--surface);margin-bottom:16px;position:relative;overflow:hidden;flex-wrap:wrap}
-.full .grow{flex:1;min-width:240px}
-.full h3{font-size:2.4rem;font-weight:900}
-.full p{margin:6px 0 0;opacity:.75}
-.full .lane{display:flex;gap:4px;margin-top:14px;max-width:420px}
-.full .lane span{height:8px;border-radius:4px;background:var(--c)}
-.full .btn{background:transparent;color:var(--surface);border-color:rgba(255,255,255,.3)}
-.full .btn.pri{background:var(--surface);color:var(--ink);border-color:var(--surface)}
-.full .stars-deco{position:absolute;right:-10px;top:-16px;display:flex;gap:6px;opacity:.12;pointer-events:none}
-.full .stars-deco svg.st{width:70px;height:70px;color:var(--surface)}
-.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-bottom:44px}
-.tile{background:var(--surface);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column}
-.tile .hd{padding:18px 18px 14px;background:color-mix(in srgb,var(--c) 12%,var(--surface));border-bottom:1px solid color-mix(in srgb,var(--c) 25%,var(--line));position:relative}
-.tile .hd h3{font-size:2.2rem;color:var(--c)}
-.tile .hd p{margin:6px 0 0;font-size:.86rem;color:var(--muted)}
-.tile .hd svg.st{position:absolute;right:14px;top:14px;width:26px;height:26px;color:var(--line-2)}
-.tile .hd svg.st.on{color:var(--star)}
-.tile .bd{padding:14px 18px 18px;display:flex;flex-direction:column;gap:12px;flex:1}
-.tile .nums{display:flex;gap:18px}
-.tile .nums div{font-size:.78rem;color:var(--muted)}
-.tile .nums b{display:block;font-family:var(--display);font-weight:800;font-size:1.7rem;color:var(--ink);line-height:1}
-.tile .acts{display:flex;gap:8px;margin-top:auto}
-.tile .acts .btn{flex:1;padding:0 10px}
-.tile .redo{align-self:flex-start;border:0;background:none;padding:0;color:var(--ink-2);font-weight:700;font-size:.86rem;cursor:pointer;text-decoration:underline;text-decoration-color:var(--c);text-decoration-thickness:2px;text-underline-offset:4px}
-.twocol{display:grid;grid-template-columns:1.3fr 1fr;gap:16px}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow)}
-.card > h2{font-size:1.7rem;padding:20px 22px 0}
-.trend{padding-bottom:18px}
-.trend .tabs{display:flex;gap:6px;flex-wrap:wrap;padding:14px 22px 12px}
-.trend .chart{padding:0 18px}
-.trend svg{width:100%;height:auto;display:block}
 .legend{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:10px;font-size:.8rem;color:var(--muted)}
 .legend span{display:inline-flex;align-items:center;gap:6px}
 .legend i{width:14px;height:14px;border-radius:4px;border:1.5px dashed var(--line-2);display:inline-block}
@@ -337,19 +330,8 @@ svg.st{width:22px;height:22px;flex:none}
 .calc .cfail{padding:20px;color:#444;font-size:.92rem}
 
 /* ============ results ============ */
-.rhead{background:var(--surface);border-bottom:1px solid var(--line)}
-.rhead .in{max-width:1200px;margin:0 auto;padding:26px 24px 30px}
-.rhead .top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:22px}
-.rhead h1{font-size:clamp(2.6rem,6vw,4rem);font-weight:900}
-.rhead p{margin:8px 0 0;color:var(--muted)}
-.rgrid{display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:center}
-.rbig{text-align:left}
-.rbig .lab{font-weight:700;color:var(--muted)}
-.rbig .v{font-family:var(--display);font-weight:900;font-size:clamp(6rem,14vw,10rem);line-height:.85}
-.rbig .stars{margin-top:12px}
-.rrows{display:flex;flex-direction:column;gap:2px}
-.rrows .ladder{padding:0}
 .rbody{max-width:1200px;margin:0 auto;padding:26px 24px 70px}
+@media (max-width:760px){.rbody{padding-left:14px;padding-right:14px}}
 .rtabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;align-items:center}
 .rtabs .sp{flex:1}
 .sheetgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:8px}
@@ -374,14 +356,11 @@ dialog .goalin input{width:100px;height:64px;border-radius:16px;border:1.5px sol
 
 /* ============ responsive ============ */
 @media (max-width:1040px){
-  .board{grid-template-columns:1fr}
-  .comp{border-right:0;border-bottom:1px solid var(--line);flex-direction:row;flex-wrap:wrap;align-items:flex-end;gap:12px 28px}
-  .comp .stars{margin-top:0;padding-top:0}
-  .tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .run{grid-template-columns:8px 1fr auto;gap:8px 18px}
+  .run .nums{grid-column:2}
+  .run .spark{display:none}
+  .run .acts{grid-column:3;grid-row:1 / span 2}
   .twocol{grid-template-columns:1fr}
-  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .stat:nth-child(3){border-left:0;padding-left:0}
-  .stat:nth-child(n+3){border-top:1px solid var(--line)}
 }
 @media (max-width:760px){
   .appbar .in{padding:12px 14px}
@@ -389,12 +368,20 @@ dialog .goalin input{width:100px;height:64px;border-radius:16px;border:1.5px sol
   .chip{padding:0 12px}
   .wrap{padding:18px 14px 60px}
   .setup{grid-template-columns:1fr;padding:22px;gap:20px}
-  .comp,.ladder{padding:18px}
+  .ladder{padding:18px}
+  .flag .in{padding:0 14px}
+  .flag .mid{grid-template-columns:1fr;gap:22px}
+  .flag .four{gap:4px}
+  .flag .s4 .v{font-size:1.9rem}
+  .flag .s4 .nm{font-size:.8rem}
+  .flag .hello{font-size:1.3rem}
+  .run{grid-template-columns:6px 1fr;gap:10px 14px;padding:18px 0}
+  .run .nums,.run .acts{grid-column:2;grid-row:auto}
+  .run .acts .btn{flex:1}
+  .run h3{font-size:2.2rem}
+  .sh h2{font-size:2.2rem}
   .ladder .axis,.ladder .row{grid-template-columns:70px 1fr 40px;gap:10px}
   .ladder .v{font-size:1.5rem}
-  .tiles{grid-template-columns:1fr}
-  .full{padding:20px}
-  .full .btn{flex:1}
   .resume{border-radius:22px}
   .tb .row1{gap:6px;padding:8px 8px 6px;min-height:54px}
   .tb .qof,.tlabel,.clock .s{display:none}
@@ -429,9 +416,7 @@ dialog .goalin input{width:100px;height:64px;border-radius:16px;border:1.5px sol
   .navbtn{padding:0 14px}
   .cell{width:40px;height:40px}
   .calc{left:0!important;right:0;top:auto!important;bottom:0;width:100%!important;height:72%!important;max-width:none;border-radius:22px 22px 0 0;resize:none}
-  .rhead .in,.rbody{padding-left:14px;padding-right:14px}
-  .rgrid{grid-template-columns:1fr;gap:18px}
-}
+    }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
 </style>
 </head>
@@ -463,7 +448,8 @@ dialog .goalin input{width:100px;height:64px;border-radius:16px;border:1.5px sol
     <span class="sp"></span>
     <button class="chip" id="bookChip"><span class="d"></span><span id="bookTxt">No booklet</span></button>
     <button class="iconbtn" id="themeBtn" aria-label="Switch to dark mode"></button>
-  </div><div class="stripes" aria-hidden="true"></div></header>
+  </div></header>
+  <div id="flagBox"></div>
   <main class="wrap" id="homeMain"></main>
 </div>
 
@@ -641,7 +627,7 @@ function stats(){
 }
 
 /* ============ HOME ============ */
-let view='home',pending=null,trendKey='all';
+let view='home',pending=null;
 function ladderHTML(vals,goal,only){
   const pos=v=>((v-1)/34*100).toFixed(2)+'%';
   const rows=[['english','English'],['math','Math'],['reading','Reading'],['science','Science'],['stem','STEM']].filter(([k])=>!only||k in vals);
@@ -653,50 +639,65 @@ function ladderHTML(vals,goal,only){
     <div class="key"><span><i style="width:2px;height:12px;background:var(--ink)"></i>Readiness benchmark</span>${goal?`<span><i style="height:12px;border-left:2px dashed var(--star)"></i>Your goal, ${goal}</span>`:''}</div>`;
 }
 function starsHTML(L){return `<div class="stars">${ORDER.map(s=>`<div class="s ${L[s]!=null&&L[s]>=BENCH[s]?'on':''}">${star(L[s]!=null&&L[s]>=BENCH[s])}${SECTIONS[s].name}</div>`).join('')}</div>`}
+const starSvg=on=>`<svg class="st ${on?'on':'off'}" aria-hidden="true"><use href="#star"/></svg>`;
+/* the Chicago flag as a scoreboard: four stars, one per section, lit at the readiness benchmark */
+function flagHTML({top,lab,big,empty,L,secs,bot}){
+  return `<section class="flag" aria-label="Scores">
+    <div class="in"><div class="top">${top}</div></div>
+    <div class="stripe"></div>
+    <div class="in"><div class="mid">
+      <div class="comp"><div class="lab">${lab}</div>${big!=null?`<div class="big num" id="bigN">${big}</div>`:empty}</div>
+      <div class="four">${(secs||ORDER).map(s=>{const v=L[s],on=v!=null&&v>=BENCH[s];
+        return `<div class="s4" style="--c:${sv(s)}">${starSvg(on)}<div class="nm"><i></i>${SECTIONS[s].name}</div><div class="v ${v==null?'none':''}">${v??'–'}</div><div class="bm">${on?'Benchmark met':`Benchmark ${BENCH[s]}`}</div></div>`}).join('')}</div>
+    </div></div>
+    <div class="stripe"></div>
+    ${bot?`<div class="in"><div class="bot">${bot}</div></div>`:''}
+  </section>`;
+}
+function spark(s){
+  const pts=[...scored()].reverse().filter(h=>h.secs[s]).map(h=>h.secs[s].scale);
+  if(!pts.length)return `<span>No tries yet</span>`;
+  const W=150,H=44,x=i=>pts.length===1?W/2:4+i*(W-8)/(pts.length-1),y=v=>4+(35-v)/34*(H-8),c=css('--'+s);
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${SECTIONS[s].name} scores over time">
+    <line x1="0" x2="${W}" y1="${y(BENCH[s])}" y2="${y(BENCH[s])}" stroke="${css('--line-2')}" stroke-dasharray="3 3"/>
+    ${pts.length>1?`<path d="${pts.map((v,i)=>`${i?'L':'M'}${x(i)},${y(v)}`).join('')}" fill="none" stroke="${c}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>`:''}
+    <circle cx="${x(pts.length-1)}" cy="${y(pts[pts.length-1])}" r="4" fill="${c}"/></svg>`;
+}
+function greet(){const h=new Date().getHours();return h<5?'Up late? Let’s go.':h<12?'Good morning.':h<18?'Good afternoon.':'Good evening.'}
 function renderHome(){
   paintThemeBtn();
   const M=$('#homeMain'),L=latest(),B=best(),S=stats();
   const comp=(L.english&&L.math&&L.reading)?half((L.english+L.math+L.reading)/3):null;
   const stem=(L.math&&L.science)?half((L.math+L.science)/2):null;
   const nStars=ORDER.filter(s=>L[s]!=null&&L[s]>=BENCH[s]).length;
-  let h='';
-  if(!bookBuf)h+=`<section class="setup">
+  $('#flagBox').innerHTML=(bookBuf?'':`<div class="wrap" style="padding-bottom:0"><section class="setup" style="margin-bottom:0">
       <div><h1>Your Pre-ACT, one question at a time.</h1>
       <p>Real Form 608 questions with the passage beside them, real time limits, Desmos, cross-outs, and scores on the 1–35 scale.</p>
       <p>Open your booklet PDF to start. It stays on this device.</p></div>
-      <div class="drop" id="drop" tabindex="0" role="button" aria-label="Open booklet PDF">${icon('up')}<b>Open booklet PDF</b><span>or drop the file here</span></div></section>`;
+      <div class="drop" id="drop" tabindex="0" role="button" aria-label="Open booklet PDF">${icon('up')}<b>Open booklet PDF</b><span>or drop the file here</span></div></section></div>`)+flagHTML({
+    top:`<span class="hello">${greet()}</span><span class="goal">${prefs.goal?`<span>Goal <b>${prefs.goal}</b></span><span class="togo">${comp?(comp>=prefs.goal?'Reached':`${prefs.goal-comp} to go`):''}</span>`:''}<button class="btn sm" id="goalBtn">${icon('pen')}${prefs.goal?'Change goal':'Set a goal'}</button></span>`,
+    lab:'Composite',big:comp,
+    empty:`<div class="none">Finish English, Math, and Reading to see it.</div>`,
+    L,bot:`<span><b>${nStars}/4</b>stars</span><span><b>${S.streak}</b>${S.streak===1?'day':'days'} in a row</span><span><b>${S.ans}</b>${S.ans===1?'question':'questions'} answered</span><span><b>${S.acc==null?'–':S.acc+'%'}</b>right</span><span><b>${hm(S.ms)}</b>practiced</span>`});
+  let h='';
   const a=store.active;
   if(a){const s=a.order[a.cur],x=a.sec[s],n=a.drill?a.drill.length:SECTIONS[s].n,done=(a.drill||range(1,SECTIONS[s].n)).filter(q=>x.ans[q]).length;
     h+=`<section class="resume" style="--sc:${sv(s)}"><div class="ring" style="--p:${Math.round(done/n*100)}"><span>${done}</span></div>
       <div class="tx"><b>${a.drill?`${SECTIONS[s].name}: redo missed`:(a.kind==='full'?'Full test: ':'')+SECTIONS[s].name}</b><div>${done} of ${n} answered, ${fmt(a.totalMs)} in. Paused.</div></div>
       <button class="btn pri" id="resGo">Resume</button><button class="btn ghost" id="resDrop">Discard</button></section>`}
-  const vals={...L,stem};
-  h+=`<section class="board">
-    <div class="comp">
-      <div><div class="lab">Composite</div><div class="big ${comp?'':'none'}">${comp??'Not yet'}</div></div>
-      <div class="goal">${prefs.goal?`<span>Goal <b>${prefs.goal}</b></span><span class="togo">${comp?(comp>=prefs.goal?'Reached':`${prefs.goal-comp} to go`):''}</span>`:''}<button class="btn sm" id="goalBtn">${icon('pen')}${prefs.goal?'Change goal':'Set a goal'}</button></div>
-      <div>${starsHTML(L)}<div class="stars-cap">${nStars} of 4 stars. Each section earns one at its readiness benchmark.</div></div>
-    </div>
-    <div class="ladder">${ladderHTML(vals,prefs.goal)}</div>
+  h+=`<div class="sh"><h2>Practice</h2><p>Timed runs like test day. Practice lets you check each answer.</p></div>
+  <section class="runs">
+    <div class="run full"><span class="bar"></span><div><h3>Full test</h3><div class="meta">All four sections back to back. 153 questions, 2 hr 40 min.</div></div>
+      <div class="nums"><div><b>${comp??'–'}</b>composite</div><div><b>${stem??'–'}</b>STEM</div></div><div class="spark"></div>
+      <div class="acts"><button class="btn pri" data-go="full" data-m="timed">Timed</button><button class="btn" data-go="full" data-m="practice">Practice</button></div></div>
+    ${ORDER.map(s=>{const S0=SECTIONS[s],miss=missedLatest(s).length;return `<div class="run" style="--c:${sv(s)}"><span class="bar"></span>
+      <div><h3>${S0.name}</h3><div class="meta">${S0.n} questions, ${S0.min} minutes</div>${miss?`<button class="redo" data-redo="${s}">Redo the ${miss} you missed</button>`:''}</div>
+      <div class="nums"><div><b>${L[s]??'–'}</b>latest</div><div><b>${B[s]??'–'}</b>best</div><div><b>${tries(s)}</b>${tries(s)===1?'try':'tries'}</div></div>
+      <div class="spark">${spark(s)}</div>
+      <div class="acts"><button class="btn pri" data-go="${s}" data-m="timed">Timed</button><button class="btn" data-go="${s}" data-m="practice">Practice</button></div></div>`}).join('')}
   </section>
-  <section class="stats">
-    <div class="stat"><b>${S.streak}</b><span>${S.streak===1?'day':'days'} in a row</span></div>
-    <div class="stat"><b>${S.ans}</b><span>${S.ans===1?'question':'questions'} answered</span></div>
-    <div class="stat"><b>${S.acc==null?'–':S.acc+'%'}</b><span>accuracy</span></div>
-    <div class="stat"><b>${hm(S.ms)}</b><span>practiced</span></div>
-  </section>
-  <div class="sh"><h2>Practice</h2><p>Timed runs like test day. Practice lets you check each answer.</p></div>
-  <section class="full"><div class="stars-deco">${star(1)}${star(1)}${star(1)}${star(1)}</div>
-    <div class="grow"><h3>Full test</h3><p>All four sections back to back. 153 questions, 2 hr 40 min.</p>
-      <div class="lane">${ORDER.map(s=>`<span style="--c:${sv(s)};flex:${SECTIONS[s].min}"></span>`).join('')}</div></div>
-    <button class="btn pri" data-go="full" data-m="timed">Start timed</button><button class="btn" data-go="full" data-m="practice">Practice</button></section>
-  <section class="tiles">${ORDER.map(s=>{const S0=SECTIONS[s],miss=missedLatest(s).length,on=L[s]!=null&&L[s]>=BENCH[s];return `<div class="tile" style="--c:${sv(s)}">
-      <div class="hd">${star(on)}<h3>${S0.name}</h3><p>${S0.n} questions, ${S0.min} min</p></div>
-      <div class="bd"><div class="nums"><div><b>${L[s]??'–'}</b>latest</div><div><b>${B[s]??'–'}</b>best</div><div><b>${BENCH[s]}</b>benchmark</div></div>
-        ${miss?`<button class="redo" data-redo="${s}">Redo the ${miss} you missed</button>`:''}
-        <div class="acts"><button class="btn pri sm" data-go="${s}" data-m="timed">Timed</button><button class="btn sm" data-go="${s}" data-m="practice">Practice</button></div></div></div>`}).join('')}</section>
   <section class="twocol">
-    <div class="card trend"><h2>Progress</h2><div class="tabs" id="trTabs"></div><div class="chart" id="trChart"></div></div>
+    <div class="card"><h2>Where you stand</h2><p class="sub">Latest scale scores on the 1–35 range, against the readiness benchmarks${prefs.goal?' and your goal':''}.</p><div class="ladder">${ladderHTML({...L,stem},prefs.goal)}</div></div>
     <div class="card"><h2>History</h2>${historyList()}</div>
   </section>
   <div class="foot"><span>Saved in this browser.</span><button class="btn ghost sm" id="expBtn">Export progress</button><button class="btn ghost sm" id="impBtn">Import progress</button></div>`;
@@ -711,41 +712,19 @@ function renderHome(){
   $('#goalBtn').onclick=askGoal;
   M.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>showResults(b.dataset.open));
   $('#expBtn').onclick=exportData;$('#impBtn').onclick=()=>$('#importIn').click();
-  const tabs=[['all','All'],['composite','Composite'],...ORDER.map(s=>[s,SECTIONS[s].name])];
-  $('#trTabs').innerHTML=tabs.map(([k,n])=>`<button class="btn sm" aria-pressed="${k===trendKey}" data-k="${k}">${n}</button>`).join('');
-  $('#trTabs').querySelectorAll('button').forEach(b=>b.onclick=()=>{trendKey=b.dataset.k;renderHome()});
-  drawTrend();
 }
 function historyList(){
   if(!store.history.length)return `<div class="empty">Finished sessions land here, with every answer to look back at.</div>`;
-  return `<ul class="hist">${store.history.slice(0,10).map(h=>{
+  return `<ul class="hist">${store.history.slice(0,8).map(h=>{
     const s1=Object.keys(h.secs)[0],v=h.drill?`${h.secs[s1].drillRight}/${h.drill.length}`:(h.kind==='full'?h.composite:h.secs[h.kind].scale);
     const nm=h.drill?`${SECTIONS[s1].name}, missed questions`:(h.kind==='full'?'Full test':SECTIONS[h.kind].name);
     return `<li><span class="sw" style="--c:${h.kind==='full'?'var(--ink)':sv(s1)}"></span>
       <div class="tx"><b>${nm}</b><span>${h.mode==='timed'?'Timed':'Practice'}, ${when(h.finishedAt)}</span></div>
       <span class="v">${v??'–'}</span><button class="btn sm" data-open="${h.id}">Review</button></li>`}).join('')}</ul>`;
 }
-function drawTrend(){
-  const el=$('#trChart'),hist=[...scored()].reverse();
-  const series=trendKey==='all'?ORDER.map(s=>({k:s,c:css('--'+s),pts:hist.filter(h=>h.secs[s]).map(h=>({t:h.finishedAt,v:h.secs[s].scale}))}))
-    :[{k:trendKey,c:trendKey==='composite'?css('--ink'):css('--'+trendKey),pts:hist.map(h=>({t:h.finishedAt,v:trendKey==='composite'?h.composite:h.secs[trendKey]?.scale})).filter(p=>p.v!=null)}];
-  const all=series.flatMap(s=>s.pts);
-  if(!all.length){el.innerHTML=`<p style="color:var(--muted);margin:2px 4px 6px">${trendKey==='composite'?'Your composite line starts after a full test.':'Your scores will chart here as you practice.'}</p>`;return}
-  const times=[...new Set(all.map(p=>p.t))].sort((a,b)=>a-b),xi=t=>times.indexOf(t);
-  const W=560,H=210,pl=30,pr=14,pt=12,pb=14;
-  const x=i=>times.length===1?(pl+(W-pl-pr)/2):pl+i*(W-pl-pr)/(times.length-1),y=v=>pt+(35-v)/34*(H-pt-pb);
-  const mut=css('--muted'),ln=css('--line'),surf=css('--surface');
-  let g=[1,12,18,24,30,35].map(v=>`<line x1="${pl}" x2="${W-pr}" y1="${y(v)}" y2="${y(v)}" stroke="${ln}"/><text x="${pl-8}" y="${y(v)+4}" font-size="11" text-anchor="end" fill="${mut}">${v}</text>`).join('');
-  if(prefs.goal)g+=`<line x1="${pl}" x2="${W-pr}" y1="${y(prefs.goal)}" y2="${y(prefs.goal)}" stroke="${css('--star')}" stroke-dasharray="5 5" stroke-width="1.5"/><text x="${W-pr}" y="${y(prefs.goal)-6}" font-size="11" text-anchor="end" fill="${css('--star')}">goal</text>`;
-  for(const s of series){if(!s.pts.length)continue;
-    g+=`<path d="${s.pts.map((p,i)=>`${i?'L':'M'}${x(xi(p.t))},${y(p.v)}`).join('')}" fill="none" stroke="${s.c}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>`;
-    g+=s.pts.map(p=>`<circle cx="${x(xi(p.t))}" cy="${y(p.v)}" r="4.5" fill="${surf}" stroke="${s.c}" stroke-width="2.5"><title>${p.v}, ${new Date(p.t).toLocaleDateString()}</title></circle>`).join('')}
-  const leg=series.length>1?`<div class="legend">${series.map(s=>`<span><i style="background:${s.c};border:0;border-radius:50%"></i>${SECTIONS[s.k].name}</span>`).join('')}</div>`:'';
-  el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Score trend">${g}</svg>${leg}`;
-}
 function askGoal(){
   const d=$('#dlg');
-  d.innerHTML=`<h2>Set your goal</h2><p>Pick the composite you’re aiming for (1–35). It shows on your score ladder and progress chart.</p>
+  d.innerHTML=`<h2>Set your goal</h2><p>Pick the composite you’re aiming for (1–35). It shows at the top of your home screen and on your score ladder.</p>
     <div class="goalin"><input id="goalIn" type="number" min="1" max="35" inputmode="numeric" value="${prefs.goal||''}" aria-label="Goal composite"><span style="color:var(--muted)">out of 35</span></div>
     <div class="row">${prefs.goal?'<button class="btn ghost" value="clear">Remove goal</button>':''}<button class="btn" value="no">Cancel</button><button class="btn pri" value="yes">Save goal</button></div>`;
   d.querySelectorAll('button').forEach(b=>b.onclick=()=>{const v=b.value;
@@ -813,7 +792,7 @@ function pauseCover(){
 function goHome(){if(A&&!R){saveCalc();save()}closeCalc(true);show('home');renderHome()}
 $('#pauseBtn').onclick=pauseCover;
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&running){acc();save()}});
-window.addEventListener('pagehide',()=>{if(running)acc();if(A&&!R)saveCalc();save()});
+window.addEventListener('pagehide',()=>{if(running)acc();if(A&&!R){saveCalc();save()}});
 
 function sectionIntro(){
   stopClock();const s=A.order[A.cur],S0=SECTIONS[s];setChrome();
@@ -1094,13 +1073,12 @@ function showResults(id,focus,fresh){
   const vals={};secs.forEach(s=>vals[s]=h.secs[s].scale);if(h.stem!=null)vals.stem=h.stem;
   const L={};secs.forEach(s=>L[s]=h.secs[s].scale);
   const drillRight=h.drill?h.secs[secs[0]].drillRight:0;
-  P.innerHTML=`<section class="rhead"><div class="stripes" aria-hidden="true"></div><div class="in">
-    <div class="top"><div><h1>${title}</h1><p>${h.mode==='timed'?'Timed':'Practice'}, ${when(h.finishedAt)}. Total time ${fmt(h.totalMs)}.</p></div><button class="btn" id="rHome">Back to home</button></div>
-    ${h.drill?`<div class="rgrid"><div class="rbig"><div class="lab">Right this time</div><div class="v"><span id="bigN">${drillRight}</span><span style="color:var(--line-2)">/${h.drill.length}</span></div></div>
-      <p style="color:var(--muted);max-width:46ch">${drillRight===h.drill.length?'Every one you missed before, you got this time.':`${h.drill.length-drillRight} still to lock in. Review them below, then try again from the home screen.`}</p></div>`
-    :`<div class="rgrid"><div class="rbig"><div class="lab">${bigLab}</div><div class="v" id="bigN">${big}</div>${starsHTML(L)}</div>
-      <div class="ladder">${ladderHTML(vals,prefs.goal,true)}</div></div>`}
-  </div></section>
+  const head=`<span><span class="ttl">${title}</span><span style="display:block;color:var(--muted);font-size:.9rem;margin-top:4px">${h.mode==='timed'?'Timed':'Practice'}, ${when(h.finishedAt)}. Total ${fmt(h.totalMs)}.</span></span><button class="btn" id="rHome">Back to home</button>`;
+  P.innerHTML=(h.drill
+    ?`<section class="flag"><div class="in"><div class="top">${head}</div></div><div class="stripe"></div>
+        <div class="in"><div class="mid"><div class="comp"><div class="lab">Right this time</div><div class="big num"><span id="bigN">${drillRight}</span><span style="color:var(--line-2)">/${h.drill.length}</span></div></div>
+        <p style="color:var(--muted);max-width:46ch;margin:0">${drillRight===h.drill.length?'Every question you missed before, you got this time.':`${h.drill.length-drillRight} still to lock in. Look at them below, then run the drill again from home.`}</p></div></div><div class="stripe"></div></section>`
+    :flagHTML({top:head,lab:bigLab,big,L,secs,bot:h.stem!=null?`<span><b>${h.stem}</b>STEM</span>`:''}))+`
   <main class="rbody">
     <div class="rtabs">${secs.length>1?secs.map(s=>`<button class="btn sm" data-tab="${s}">${SECTIONS[s].name} ${h.secs[s].scale}</button>`).join(''):''}<span class="sp"></span>
       ${h.drill?'':'<button class="btn sm" data-f="all">All</button><button class="btn sm" data-f="wrong">Missed</button><button class="btn sm" data-f="flag">Flagged</button>'}
