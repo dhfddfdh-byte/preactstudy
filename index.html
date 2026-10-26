@@ -372,6 +372,21 @@ dialog::backdrop{background:rgba(5,14,24,.55)}
 dialog h2{font-size:2rem;margin-bottom:10px}
 dialog p{margin:0 0 20px;color:var(--muted)}
 dialog .row{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap}
+dialog{max-width:520px;max-height:calc(100dvh - 32px);overflow:auto}
+dialog .sl{font-size:1.3rem;margin:18px 0 8px}
+.tcards{display:flex;flex-direction:column;gap:8px}
+.tcard{display:flex;align-items:center;gap:14px;padding:10px 14px;border:1.5px solid var(--line);border-radius:16px;cursor:pointer}
+.tcard:has(input:checked){border-color:var(--ink);box-shadow:0 0 0 1.5px var(--ink)}
+.tcard > input{position:absolute;opacity:0;pointer-events:none}
+.tcard .tv{font-family:var(--display);font-weight:900;font-size:2.2rem;min-width:2.2ch;text-align:center;line-height:1}
+.tcard .tv input{width:56px;height:44px;border-radius:10px;border:1.5px solid var(--line-2);background:var(--surface-2);text-align:center;font:900 1.6rem var(--display)}
+.tcard .tt{display:flex;flex-direction:column;font-size:.84rem;color:var(--muted);line-height:1.35}
+.tcard .tt b{color:var(--ink);font-size:.98rem}
+.tcard:focus-within{outline:2.5px solid var(--sky);outline-offset:2px}
+.srow{display:flex;align-items:center;gap:12px;justify-content:space-between;padding:10px 0;border-top:1px solid var(--line);cursor:pointer}
+.srow span{display:flex;flex-direction:column;font-size:.84rem;color:var(--muted)}
+.srow b{color:var(--ink);font-size:.98rem}
+.srow input{width:22px;height:22px;accent-color:var(--ink)}
 dialog .goalin{display:flex;align-items:center;gap:12px;margin:0 0 20px}
 dialog .goalin input{width:100px;height:64px;border-radius:16px;border:1.5px solid var(--line-2);background:var(--surface-2);text-align:center;font:900 2.4rem var(--display)}
 .toast{position:fixed;left:50%;bottom:calc(90px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:var(--surface);padding:12px 18px;border-radius:999px;font-size:.92rem;z-index:100;max-width:calc(100vw - 32px)}
@@ -460,6 +475,7 @@ dialog .goalin input{width:100px;height:64px;border-radius:16px;border:1.5px sol
   <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
   <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></symbol>
   <symbol id="i-grid" viewBox="0 0 24 24"><circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="7" r="2.5"/><circle cx="7" cy="17" r="2.5"/><circle cx="17" cy="17" r="2.5"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></symbol>
   <symbol id="i-pen" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></symbol>
 </svg>
 
@@ -470,6 +486,7 @@ dialog .goalin input{width:100px;height:64px;border-radius:16px;border:1.5px sol
     <span class="sp"></span>
     <button class="chip" id="bookChip"><span class="d"></span><span id="bookTxt">No booklet</span></button>
     <button class="iconbtn" id="themeBtn" aria-label="Switch to dark mode"></button>
+    <button class="iconbtn" id="setBtn" aria-label="Settings"><svg class="i"><use href="#i-gear"/></svg></button>
   </div></header>
   <div id="flagBox"></div>
   <main class="wrap" id="homeMain"></main>
@@ -574,7 +591,7 @@ const sv=s=>`var(--${s})`;
 /* ============ STORAGE ============ */
 let store=load(),prefs=loadPrefs();
 function load(){try{const s=JSON.parse(localStorage.getItem(LS));if(s&&s.v===1)return s}catch(e){}return{v:1,active:null,history:[]}}
-function loadPrefs(){const d={size:1,timerHidden:false,goal:null,whatIf:false};try{return Object.assign(d,JSON.parse(localStorage.getItem(LS_PREF)||'{}'))}catch(e){return d}}
+function loadPrefs(){const d={size:1,timerHidden:false,goal:24,whatIf:false};try{return Object.assign(d,JSON.parse(localStorage.getItem(LS_PREF)||'{}'))}catch(e){return d}}
 function savePrefs(){try{localStorage.setItem(LS_PREF,JSON.stringify(prefs))}catch(e){}}
 let saveT=null;
 function save(){try{localStorage.setItem(LS,JSON.stringify(store))}catch(e){toast('Couldn’t save. Browser storage may be full or blocked.')}}
@@ -658,7 +675,7 @@ function ladderHTML(vals,goal,only){
       return `<div class="row" style="--c:${c}"><span class="nm"><i></i>${nm}</span>
         <div class="track">${v!=null?`<span class="fill" style="width:${pos(v)}"></span>`:''}<span class="bm" style="left:${pos(BENCH[k])}" title="Benchmark ${BENCH[k]}"></span>${goal&&k!=='stem'?`<span class="gl" style="left:${pos(goal)}"></span>`:''}</div>
         <span class="v ${v==null?'none':''}">${v??'–'}</span></div>`}).join('')}
-    <div class="key"><span><i style="width:2px;height:12px;background:var(--ink)"></i>Readiness benchmark</span>${goal?`<span><i style="height:12px;border-left:2px dashed var(--star)"></i>Your goal, ${goal}</span>`:''}</div>`;
+    <div class="key"><span><i style="width:2px;height:12px;background:var(--ink)"></i>Readiness benchmark</span>${goal?`<span><i style="height:12px;border-left:2px dashed var(--star)"></i>Your target, ${goal}</span>`:''}</div>`;
 }
 function starsHTML(L){return `<div class="stars">${ORDER.map(s=>`<div class="s ${L[s]!=null&&L[s]>=BENCH[s]?'on':''}">${star(L[s]!=null&&L[s]>=BENCH[s])}${SECTIONS[s].name}</div>`).join('')}</div>`}
 const starSvg=on=>`<svg class="st ${on?'on':'off'}" aria-hidden="true"><use href="#star"/></svg>`;
@@ -697,7 +714,7 @@ function renderHome(){
       <p>Real Form 608 questions with the passage beside them, real time limits, Desmos, cross-outs, and scores on the 1–35 scale.</p>
       <p>Open your booklet PDF to start. It stays on this device.</p></div>
       <div class="drop" id="drop" tabindex="0" role="button" aria-label="Open booklet PDF">${icon('up')}<b>Open booklet PDF</b><span>or drop the file here</span></div></section></div>`)+flagHTML({
-    top:`<span class="hello">${greet()}</span><span class="goal">${prefs.goal?`<span>Goal <b>${prefs.goal}</b></span><span class="togo">${comp?(comp>=prefs.goal?'Reached':`${prefs.goal-comp} to go`):''}</span>`:''}<button class="btn sm" id="goalBtn">${icon('pen')}${prefs.goal?'Change goal':'Set a goal'}</button></span>`,
+    top:`<span class="hello">${greet()}</span><span class="goal">${prefs.goal?`<span>Goal <b>${prefs.goal}</b> <span class="togo">${goalName(prefs.goal)}</span></span><span class="togo">${comp?(comp>=prefs.goal?'Reached':`${prefs.goal-comp} to go`):''}</span>`:''}<button class="btn sm" id="goalBtn">${icon('pen')}${prefs.goal?'Change':'Set a goal'}</button></span>`,
     lab:'Composite',big:comp,
     empty:`<div class="none">Finish English, Math, and Reading to see it.</div>`,
     L,bot:`<span><b>${nStars}/4</b>stars</span><span><b>${S.streak}</b>${S.streak===1?'day':'days'} in a row</span><span><b>${S.ans}</b>${S.ans===1?'question':'questions'} answered</span><span><b>${S.acc==null?'–':S.acc+'%'}</b>right</span><span><b>${hm(S.ms)}</b>practiced</span>`});
@@ -744,17 +761,44 @@ function historyList(){
       <div class="tx"><b>${nm}</b><span>${h.mode==='timed'?'Timed':'Practice'}, ${when(h.finishedAt)}</span></div>
       <span class="v">${v??'–'}</span><button class="btn sm" data-open="${h.id}">Review</button></li>`}).join('')}</ul>`;
 }
-function askGoal(){
-  const d=$('#dlg');
-  d.innerHTML=`<h2>Set your goal</h2><p>Pick the composite you’re aiming for (1–35). It shows at the top of your home screen and on your score ladder.</p>
-    <div class="goalin"><input id="goalIn" type="number" min="1" max="35" inputmode="numeric" value="${prefs.goal||''}" aria-label="Goal composite"><span style="color:var(--muted)">out of 35</span></div>
-    <div class="row">${prefs.goal?'<button class="btn ghost" value="clear">Remove goal</button>':''}<button class="btn" value="no">Cancel</button><button class="btn pri" value="yes">Save goal</button></div>`;
-  d.querySelectorAll('button').forEach(b=>b.onclick=()=>{const v=b.value;
-    if(v==='yes'){const n=Math.round(+$('#goalIn').value);if(!(n>=1&&n<=35)){toast('Enter a number from 1 to 35.');return}prefs.goal=n}
-    if(v==='clear')prefs.goal=null;
-    d.close();savePrefs();renderHome()});
-  d.showModal();$('#goalIn').focus();
+/* targets: NC A&T admitted-student ACT ranges */
+const TARGETS=[
+  {v:17,name:'Minimum',d:'Lowest NC A&T accepts when a score is required'},
+  {v:20,name:'Typical admit',d:'Around the average admitted student'},
+  {v:24,name:'Top quarter',d:'Top 25% of admitted students'},
+  {v:28,name:'Full ride',d:'Cheatham-White Scholarship minimum'},
+];
+const goalName=v=>(TARGETS.find(t=>t.v===v)||{name:'Custom'}).name;
+const goalSum=v=>Math.ceil((v-.5)*3);
+function askGoal(){openSettings(true)}
+function openSettings(focusGoal){
+  const d=$('#dlg'),L=latest(),have=(L.english||0)+(L.math||0)+(L.reading||0),full=L.english&&L.math&&L.reading;
+  const card=t=>`<label class="tcard"><input type="radio" name="tg" value="${t.v}" ${prefs.goal===t.v?'checked':''}><span class="tv">${t.v}</span><span class="tt"><b>${t.name}</b><span>${t.d}</span><span>English + Math + Reading total ${goalSum(t.v)}${full?(have>=goalSum(t.v)?', reached':`, you need +${goalSum(t.v)-have}`):''}</span></span></label>`;
+  const custom=prefs.goal&&!TARGETS.some(t=>t.v===prefs.goal);
+  d.innerHTML=`<h2>Settings</h2>
+    <h3 class="sl">Target ACT composite</h3>
+    <p style="margin:0 0 12px">Based on NC A&T’s admitted students. It shows at the top of home and as the red line on your score ladder.</p>
+    <div class="tcards">${TARGETS.map(card).join('')}
+      <label class="tcard"><input type="radio" name="tg" value="custom" ${custom?'checked':''}><span class="tv"><input id="goalIn" type="number" min="1" max="35" inputmode="numeric" value="${custom?prefs.goal:''}" aria-label="Custom target" placeholder="–"></span><span class="tt"><b>Custom</b><span>Any score from 1 to 35</span></span></label></div>
+    <h3 class="sl">Results</h3>
+    <label class="srow"><span><b>Show what-if with N/A questions</b><span>Off by default. Your real score never counts them.</span></span><input type="checkbox" id="setWi" ${prefs.whatIf?'checked':''}></label>
+    <h3 class="sl">Display</h3>
+    <label class="srow"><span><b>Dark mode</b></span><input type="checkbox" id="setDark" ${isDark()?'checked':''}></label>
+    <div class="row" style="margin-top:20px"><button class="btn" value="no">Cancel</button><button class="btn pri" value="yes">Save</button></div>`;
+  $('#goalIn').onfocus=()=>{d.querySelector('input[value="custom"]').checked=true};
+  d.querySelectorAll('.row button').forEach(b=>b.onclick=()=>{
+    if(b.value==='yes'){
+      const pick=d.querySelector('input[name="tg"]:checked')?.value;
+      if(pick==='custom'){const n=Math.round(+$('#goalIn').value);if(!(n>=1&&n<=35)){toast('Enter a custom target from 1 to 35.');return}prefs.goal=n}
+      else if(pick)prefs.goal=+pick;
+      prefs.whatIf=$('#setWi').checked;
+      if($('#setDark').checked!==isDark())toggleTheme();
+      savePrefs();
+    }
+    d.close();if(view==='home')renderHome()});
+  d.showModal();(focusGoal?d.querySelector('input[name="tg"]:checked')||d.querySelector('input[name="tg"]'):d.querySelector('.pri')).focus();
 }
+$('#setBtn').onclick=()=>openSettings(false);
 function exportData(){const b=new Blob([JSON.stringify(store,null,1)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`preact-progress-${new Date().toISOString().slice(0,10)}.json`;a.click()}
 $('#importIn').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;
   try{const d=JSON.parse(await f.text());if(d.v!==1||!Array.isArray(d.history))throw 0;
