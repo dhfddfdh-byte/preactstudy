@@ -344,6 +344,22 @@ svg.st.on{color:var(--star)}
 .ans.w{box-shadow:inset 4px 0 0 var(--wrong)}
 .ans .t{font-size:.66rem;color:var(--muted);display:block}
 .note{color:var(--muted);font-size:.86rem;max-width:80ch;margin:20px 0 0}
+.ans.na{border-style:dashed}
+.ans .t.na{color:var(--ink-2);font-weight:700}
+.wi{display:flex;align-items:center;gap:14px;width:100%;padding:14px 18px;margin:0 0 16px;border:1px solid var(--line);border-radius:18px;background:var(--surface);cursor:pointer;text-align:left;color:var(--ink)}
+.wi b{display:block}
+.wi span.d{font-size:.86rem;color:var(--muted)}
+.wi .tg{margin-left:auto;width:42px;height:24px;border-radius:12px;background:var(--line-2);position:relative;flex:none;transition:background .15s}
+.wi .tg::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:var(--surface);transition:left .15s}
+.wi[aria-checked="true"] .tg{background:var(--sky)}
+.wi[aria-checked="true"] .tg::after{left:21px}
+.wipanel{border:1px dashed var(--line-2);border-radius:18px;padding:16px 18px;margin:-6px 0 18px;background:var(--surface-2)}
+.wipanel table{width:100%;border-collapse:collapse;font-size:.93rem}
+.wipanel th{text-align:left;font-size:.8rem;color:var(--muted);font-weight:700;padding:6px 8px}
+.wipanel td{padding:8px;border-top:1px solid var(--line)}
+.wipanel td.n{font-family:var(--display);font-weight:800;font-size:1.4rem}
+.wipanel .up{color:var(--right);font-weight:700}.wipanel .dn{color:var(--wrong);font-weight:700}
+.wipanel p{margin:10px 0 0;font-size:.82rem;color:var(--muted)}
 
 dialog{border:1px solid var(--line);border-radius:22px;padding:26px;max-width:460px;width:calc(100% - 32px);background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
 dialog::backdrop{background:rgba(5,14,24,.55)}
@@ -552,7 +568,7 @@ const sv=s=>`var(--${s})`;
 /* ============ STORAGE ============ */
 let store=load(),prefs=loadPrefs();
 function load(){try{const s=JSON.parse(localStorage.getItem(LS));if(s&&s.v===1)return s}catch(e){}return{v:1,active:null,history:[]}}
-function loadPrefs(){const d={size:1,timerHidden:false,goal:null};try{return Object.assign(d,JSON.parse(localStorage.getItem(LS_PREF)||'{}'))}catch(e){return d}}
+function loadPrefs(){const d={size:1,timerHidden:false,goal:null,whatIf:false};try{return Object.assign(d,JSON.parse(localStorage.getItem(LS_PREF)||'{}'))}catch(e){return d}}
 function savePrefs(){try{localStorage.setItem(LS_PREF,JSON.stringify(prefs))}catch(e){}}
 let saveT=null;
 function save(){try{localStorage.setItem(LS,JSON.stringify(store))}catch(e){toast('Couldn’t save. Browser storage may be full or blocked.')}}
@@ -868,7 +884,7 @@ function renderQ(scrollTop){
   const showKey=!!R||(A.mode==='practice'&&!!st().checked[q]),mine=ans[q],ck=key(s,q);
   const I=$('#qin');I.innerHTML='';I.classList.toggle('locked',!!R);I.classList.toggle('xmode',xMode&&!R&&MOBILE());
   const head=document.createElement('div');head.className='qhead';
-  head.innerHTML=`<h2>Question ${q}${isTry(s,q)&&R?'<small>tryout</small>':''}</h2>${R?'':`<div class="tags"><button class="flagbtn xbtn" id="xBtn" aria-pressed="${xMode}">${icon('x')}Cross out</button><button class="flagbtn" id="flagBtn" aria-pressed="${flagged}">${icon('flag')}${flagged?'Flagged':'Flag'}</button></div>`}`;
+  head.innerHTML=`<h2>Question ${q}${isTry(s,q)&&R?'<small>N/A, not scored</small>':''}</h2>${R?'':`<div class="tags"><button class="flagbtn xbtn" id="xBtn" aria-pressed="${xMode}">${icon('x')}Cross out</button><button class="flagbtn" id="flagBtn" aria-pressed="${flagged}">${icon('flag')}${flagged?'Flagged':'Flag'}</button></div>`}`;
   I.appendChild(head);
   const crops=[cropEl(g.p,g.stem,scale,'stem')];I.appendChild(crops[0]);
   const box=document.createElement('div');box.className='opts';box.setAttribute('role','radiogroup');box.setAttribute('aria-label',`Answer choices for question ${q}`);
@@ -884,7 +900,7 @@ function renderQ(scrollTop){
   });
   I.appendChild(box);
   if(showKey){
-    const t=isTry(s,q)?'<small>Tryout question: not counted in the official score. The answer was worked out from the booklet, since ACT didn’t release it.</small>':'';
+    const t=isTry(s,q)?'<small>N/A question: it doesn’t count toward your score, just like on your official report. The answer was worked out from the booklet, since ACT didn’t release it.</small>':'';
     const f=document.createElement('div');f.className='fbm '+(mine===ck?'r':'w');
     f.innerHTML=mine===ck?`<b>Correct.</b>${t}`:`<b>${mine?'Not quite.':'Left blank.'}</b>The answer is ${ck}.${t}`;I.appendChild(f);
   }else if(A.mode==='practice'){
@@ -1103,20 +1119,35 @@ function showResults(id,focus,fresh){
     <div class="rtabs">${secs.length>1?secs.map(s=>`<button class="btn sm" data-tab="${s}">${SECTIONS[s].name} ${h.secs[s].scale}</button>`).join(''):''}<span class="sp"></span>
       ${h.drill?'':'<button class="btn sm" data-f="all">All</button><button class="btn sm" data-f="wrong">Missed</button><button class="btn sm" data-f="flag">Flagged</button>'}
       <button class="btn sm pri" id="rRev">Review in booklet</button></div>
+    ${h.drill?'':`<button class="wi" id="wiBtn" role="switch" aria-checked="${prefs.whatIf}"><span><b>What if the N/A questions counted?</b><span class="d">Off by default. Your real score never counts them; this only shows how they’d change it.</span></span><span class="tg"></span></button><div class="wipanel" id="wiPanel" ${prefs.whatIf?'':'hidden'}></div>`}
     <div id="secLine" style="color:var(--muted);margin:-4px 0 14px;font-size:.9rem"></div>
     <div class="sheetgrid" id="sheetG"></div>
-    ${h.drill?'':'<p class="note">Scale scores use the Pre-ACT’s 1–35 range and count only scored questions, like on test day. Tryout questions are marked and left out. ACT doesn’t publish this form’s conversion table, so it’s estimated from your official report and matches it at your September scores.</p>'}
+    ${h.drill?'':'<p class="note">Scale scores use the Pre-ACT’s 1–35 range and count only scored questions, like on test day. Questions marked N/A are unscored tryout items, so they don’t count, just like on your official report. ACT doesn’t publish this form’s conversion table, so it’s estimated from your official report and matches it at your September scores.</p>'}
   </main>`;
   const draw=()=>{const x=h.secs[tab],qs=h.drill||range(1,SECTIONS[tab].n);let gh='';
     if(!h.drill)$('#secLine').textContent=`${SECTIONS[tab].name}: ${x.scale} on the 1–35 scale, ${x.raw} of ${x.n} scored questions right, ${fmt(x.ms)}.`;
     for(const q of qs){const a=x.ans[q],c=key(tab,q),ok=a===c,fl=(x.flags||[]).includes(q);
       if(filter==='wrong'&&ok)continue;if(filter==='flag'&&!fl)continue;
-      gh+=`<button class="ans ${ok?'r':'w'}" data-q="${q}" aria-label="Question ${q}, ${ok?'right':'wrong'}"><span class="n">${q}</span><span class="l">You <b>${a||'–'}</b><br>Key <b>${c}</b>${isTry(tab,q)?'<span class="t">tryout</span>':''}${fl?'<span class="t">flagged</span>':''}</span></button>`}
+      gh+=`<button class="ans ${ok?'r':'w'}${isTry(tab,q)?' na':''}" data-q="${q}" aria-label="Question ${q}, ${ok?'right':'wrong'}${isTry(tab,q)?', not scored':''}"><span class="n">${q}</span><span class="l">You <b>${a||'–'}</b><br>Key <b>${c}</b>${isTry(tab,q)?'<span class="t na">N/A</span>':''}${fl?'<span class="t">flagged</span>':''}</span></button>`}
     $('#sheetG').innerHTML=gh||'<p style="color:var(--muted)">Nothing here.</p>';
     $('#sheetG').querySelectorAll('[data-q]').forEach(b=>b.onclick=()=>openReview(h,tab,+b.dataset.q));
     P.querySelectorAll('[data-tab]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.tab===tab)));
     P.querySelectorAll('[data-f]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.f===filter)))};
   $('#rHome').onclick=goHome;
+  if(!h.drill){
+    const wiScale=x=>SCALE[secs.find(k=>h.secs[k]===x)][Math.round(x.allRaw/x.allN*x.n)];
+    const paintWi=()=>{const rows=secs.map(k=>{const x=h.secs[k],w=wiScale(x),d=w-x.scale;
+        return `<tr><td>${SECTIONS[k].name}</td><td class="n">${x.scale}</td><td>${x.raw} of ${x.n}</td><td class="n">${w}</td><td>${x.allRaw} of ${x.allN}</td><td class="${d>0?'up':d<0?'dn':''}">${d>0?'+'+d:d<0?d:'same'}</td></tr>`});
+      const wv={};secs.forEach(k=>wv[k]=wiScale(h.secs[k]));
+      const wc=(wv.english&&wv.math&&wv.reading)?half((wv.english+wv.math+wv.reading)/3):null;
+      const ws=(wv.math&&wv.science)?half((wv.math+wv.science)/2):null;
+      if(wc!=null)rows.push(`<tr><td><b>Composite</b></td><td class="n">${h.composite}</td><td></td><td class="n">${wc}</td><td></td><td class="${wc>h.composite?'up':wc<h.composite?'dn':''}">${wc>h.composite?'+'+(wc-h.composite):wc<h.composite?wc-h.composite:'same'}</td></tr>`);
+      if(ws!=null)rows.push(`<tr><td><b>STEM</b></td><td class="n">${h.stem}</td><td></td><td class="n">${ws}</td><td></td><td class="${ws>h.stem?'up':ws<h.stem?'dn':''}">${ws>h.stem?'+'+(ws-h.stem):ws<h.stem?ws-h.stem:'same'}</td></tr>`);
+      $('#wiPanel').innerHTML=`<div style="overflow-x:auto"><table><thead><tr><th>Section</th><th>Real score</th><th>Scored right</th><th>With N/A</th><th>All right</th><th>Change</th></tr></thead><tbody>${rows.join('')}</tbody></table></div>
+        <p>“With N/A” puts your total right, including the N/A questions, onto the same 1–35 scale. It’s a what-if only and isn’t saved as your score.</p>`};
+    paintWi();
+    $('#wiBtn').onclick=()=>{prefs.whatIf=!prefs.whatIf;savePrefs();$('#wiBtn').setAttribute('aria-checked',String(prefs.whatIf));$('#wiPanel').hidden=!prefs.whatIf};
+  }
   $('#rRev').onclick=()=>{const x=h.secs[tab],qs=h.drill||range(1,SECTIONS[tab].n);openReview(h,tab,qs.find(i=>x.ans[i]!==key(tab,i))??qs[0])};
   P.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{tab=b.dataset.tab;draw()});
   P.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{filter=b.dataset.f;draw()});
