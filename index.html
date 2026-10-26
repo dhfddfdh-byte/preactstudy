@@ -301,8 +301,8 @@ svg.st.on{color:var(--star)}
 .cell.b{border-style:solid;border-color:var(--wrong);color:var(--wrong)}
 .legend .la{background:var(--sc,var(--ink));border:0;border-radius:50%}
 .legend .lf{border-radius:50%;background:var(--flag);border:0}
-.legend .lr{background:var(--right);border:0;border-radius:50%}
-.legend .lw{background:var(--wrong);border:0;border-radius:50%}
+.legend .lgr{background:var(--right);border:0;border-radius:50%}
+.legend .lgw{background:var(--wrong);border:0;border-radius:50%}
 .pop .row{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
 
 .cover{position:absolute;inset:0;z-index:35;background:var(--bg);display:grid;grid-template-columns:minmax(0,1fr);place-items:center;padding:24px;overflow:auto}
@@ -781,7 +781,7 @@ function drawClock(){
 }
 $('#clock').onclick=()=>{if(R)return;prefs.timerHidden=!prefs.timerHidden;savePrefs();drawClock()};
 async function timeUp(){stopClock();const s=sec();
-  if(await ask(`Time’s up for ${SECTIONS[s].name}`,'On test day you’d stop here. Submit now, or keep going and see how far over you run.','Submit section','Keep working'))submitSection();else play()}
+  if(await ask(`Time’s up for ${SECTIONS[s].name}`,'On test day you’d stop here. Move on, or keep going and see how far over you run.','Move on','Keep working'))submitSection();else play()}
 function coverHTML(h){const C=$('#cover');C.innerHTML=h;C.hidden=false}
 function pauseCover(){
   if(R)return;stopClock();const s=sec();
@@ -796,13 +796,19 @@ window.addEventListener('pagehide',()=>{if(running)acc();if(A&&!R){saveCalc();sa
 
 function sectionIntro(){
   stopClock();const s=A.order[A.cur],S0=SECTIONS[s];setChrome();
-  const prev=A.cur>0?`<div class="kick">${SECTIONS[A.order[A.cur-1]].name} submitted</div>`:`<div class="kick">${A.drill?'Redo missed':(A.mode==='timed'?'Timed':'Practice')}</div>`;
+  const prev=A.cur>0?`<div class="kick">Next up</div>`:`<div class="kick">${A.drill?'Redo missed':(A.mode==='timed'?'Timed':'Practice')}</div>`;
   const n=A.drill?A.drill.length:S0.n;$('#navTxt').textContent='0';$('#navOf').textContent=`of ${n}`;
   coverHTML(`<div class="box" style="--sc:${sv(s)}">${prev}<h2 class="c">${S0.name}</h2>
     <div class="facts"><span>${n} question${n===1?'':'s'}</span><span>${A.mode==='timed'?`${S0.min} minutes`:'No time limit'}</span>${s==='math'?'<span>Desmos ready</span>':''}</div>
     <p>${A.drill?'Only the questions you missed last time. Check each answer as you go.':A.mode==='timed'?'The timer starts when you begin. You can pause any time.':'Use Check answer to see how you did on each one.'}${A.cur>0?' The clock is stopped, so take a break if you need one.':''}</p>
     <div class="acts"><button class="btn pri" id="cGo">Begin</button><button class="btn" id="cHome">Save and exit</button></div></div>`);
-  $('#cGo').onclick=()=>{A.phase='test';save();renderQ(true);play()};$('#cHome').onclick=goHome;
+  $('#cGo').onclick=()=>{A.phase='test';st().started=1;save();renderQ(true);play()};$('#cHome').onclick=goHome;
+}
+/* practice is free-form: move between sections any time */
+function switchSec(i,q){
+  if(running)acc();saveCalc();A.cur=i;save();
+  if(!st().started&&!st().ms){A.phase='between';return sectionIntro()}
+  A.phase='test';setChrome();if(q)st().q=q;$('#cover').hidden=true;renderQ(true);if(!running)play();
 }
 function setChrome(){
   const s=sec();
@@ -813,7 +819,8 @@ function setChrome(){
   if(s!=='math')closeCalc(true);
   curPassage=null;setTab('q');drawClock();
 }
-function submitSection(){stopClock();saveCalc();closeCalc(true);if(A.cur<A.order.length-1){A.cur++;A.phase='between';save();sectionIntro()}else finish()}
+function submitSection(){if(A.cur<A.order.length-1){closeCalc(true);switchSec(A.cur+1)}else{stopClock();saveCalc();closeCalc(true);finish()}}
+function finishNow(){stopClock();saveCalc();closeCalc(true);finish()}
 function scoreSec(s,ans){let raw=0,n=0,all=0;for(let q=1;q<=SECTIONS[s].n;q++){const ok=ans[q]===key(s,q);if(ok)all++;if(!isTry(s,q)){n++;if(ok)raw++}}return{raw,n,scale:SCALE[s][raw],allRaw:all,allN:SECTIONS[s].n,ans:{...ans}}}
 function finish(){
   const secs={};
@@ -854,12 +861,12 @@ function renderQ(scrollTop){
   const s=sec(),q=curQ(),g=G(s,q),list=qlist(),idx=list.indexOf(q),n=list.length,isDrill=!!(R?R.hist.drill:A.drill);
   $('#tQof').textContent=isDrill?`Question ${q}, ${idx+1} of ${n} missed`:`Question ${q} of ${n}`;
   $('#navTxt').textContent=isDrill?idx+1:q;$('#navOf').textContent=`of ${n}`;
-  $('#prevBtn').disabled=idx<=0;
+  $('#prevBtn').disabled=idx<=0&&!(A&&!R&&A.cur>0);
   $('#nextLbl').textContent=idx<n-1?'Next':(R?'Done':'Review');
   const scale=qScale(s,q);
   const ans=R?R.hist.secs[s].ans:st().ans,cross=R?[]:(st().cross[q]||[]),flagged=R?(R.hist.secs[s].flags||[]).includes(q):!!st().flags[q];
   const showKey=!!R||(A.mode==='practice'&&!!st().checked[q]),mine=ans[q],ck=key(s,q);
-  const I=$('#qin');I.innerHTML='';I.classList.toggle('locked',showKey);I.classList.toggle('xmode',xMode&&!R&&MOBILE());
+  const I=$('#qin');I.innerHTML='';I.classList.toggle('locked',!!R);I.classList.toggle('xmode',xMode&&!R&&MOBILE());
   const head=document.createElement('div');head.className='qhead';
   head.innerHTML=`<h2>Question ${q}${isTry(s,q)&&R?'<small>tryout</small>':''}</h2>${R?'':`<div class="tags"><button class="flagbtn xbtn" id="xBtn" aria-pressed="${xMode}">${icon('x')}Cross out</button><button class="flagbtn" id="flagBtn" aria-pressed="${flagged}">${icon('flag')}${flagged?'Flagged':'Flag'}</button></div>`}`;
   I.appendChild(head);
@@ -914,18 +921,19 @@ function renderPassage(s,g){
       pane.scrollTo({top:Math.max(0,d.offsetTop+(y0-r[1])*sc-pane.clientHeight*.45),behavior:RM()?'auto':'smooth'});break}}
 }
 function choose(L){
-  if(R)return;const S_=st(),q=S_.q;if(A.mode==='practice'&&S_.checked[q])return;
+  if(R)return;const S_=st(),q=S_.q;
   if(S_.ans[q]===L)delete S_.ans[q];else{S_.ans[q]=L;if(S_.cross[q]){S_.cross[q]=S_.cross[q].filter(x=>x!==L);if(!S_.cross[q].length)delete S_.cross[q]}}
   saveSoon();renderQ(false);
 }
 function toggleCross(L){
-  if(R)return;const S_=st(),q=S_.q;if(A.mode==='practice'&&S_.checked[q])return;
+  if(R)return;const S_=st(),q=S_.q;
   const c=S_.cross[q]||(S_.cross[q]=[]);
   if(c.includes(L))S_.cross[q]=c.filter(x=>x!==L);else{c.push(L);if(S_.ans[q]===L)delete S_.ans[q]}
   if(!S_.cross[q].length)delete S_.cross[q];saveSoon();renderQ(false);
 }
 function go(q){if(!qlist().includes(q))return;if(R)R.q=q;else{st().q=q;saveSoon()}closePop();renderQ(true)}
-function step(d){const l=qlist(),i=l.indexOf(curQ())+d;if(i>=0&&i<l.length)go(l[i])}
+function step(d){const l=qlist(),i=l.indexOf(curQ())+d;if(i>=0&&i<l.length)return go(l[i]);
+  if(d<0&&A&&!R&&A.cur>0){const ps=A.order[A.cur-1];switchSec(A.cur-1,A.sec[ps].q||SECTIONS[ps].n)}}
 $('#prevBtn').onclick=()=>step(-1);
 $('#nextBtn').onclick=()=>{const l=qlist();if(l.indexOf(curQ())<l.length-1)return step(1);if(R)return showResults(R.hist.id,R.sec);reviewScreen()};
 $('#exitReview').onclick=()=>showResults(R.hist.id,R.sec);
@@ -945,31 +953,43 @@ function paintProg(){
 }
 function cellsHTML(){const q=curQ();return qlist().map(i=>{const c=['cell'],x=status(i);if(x)c.push(x);if(!R&&st().flags[i])c.push('f');if(i===q)c.push('cur');
   return `<button class="${c.join(' ')}" data-q="${i}" aria-label="Question ${i}">${i}</button>`}).join('')}
-function legendHTML(){return R?`<div class="legend"><span><i class="lr"></i>Right</span><span><i class="lw"></i>Wrong</span><span><i style="border-style:solid;border-color:var(--wrong);border-radius:50%"></i>Blank</span></div>`
-  :`<div class="legend"><span><i class="la"></i>Answered</span><span><i style="border-radius:50%"></i>Not answered</span><span><i class="lf"></i>Flagged</span>${A.mode==='practice'?'<span><i class="lr"></i>Checked right</span><span><i class="lw"></i>Checked wrong</span>':''}</div>`}
+function legendHTML(){return R?`<div class="legend"><span><i class="lgr"></i>Right</span><span><i class="lgw"></i>Wrong</span><span><i style="border-style:solid;border-color:var(--wrong);border-radius:50%"></i>Blank</span></div>`
+  :`<div class="legend"><span><i class="la"></i>Answered</span><span><i style="border-radius:50%"></i>Not answered</span><span><i class="lf"></i>Flagged</span>${A.mode==='practice'?'<span><i class="lgr"></i>Checked right</span><span><i class="lgw"></i>Checked wrong</span>':''}</div>`}
 function navPaint(){
   const fl=!R&&Object.keys(st().flags).length;
   $('#navBtn').querySelector('.fl')?.remove();if(fl)$('#navBtn').insertAdjacentHTML('afterbegin','<span class="fl" title="Flagged questions"></span>');
   const P=$('#navPop');if(P.hidden)return;
   const s=sec(),l=qlist(),done=R?null:l.filter(i=>st().ans[i]).length,right=R?l.filter(i=>R.hist.secs[s].ans[i]===key(s,i)).length:0;
-  P.innerHTML=`<h3>${SECTIONS[s].name}<span>${R?`${right} of ${l.length} right`:`${done} of ${l.length} answered`}</span></h3><div class="grid">${cellsHTML()}</div>${legendHTML()}
-    ${R?'':`<div class="row"><button class="btn sm" id="popReview">Review and submit</button></div>`}`;
+  const chips=!R&&A.order.length>1?`<div class="rtabs" style="margin-bottom:12px">${A.order.map((x,i)=>`<button class="btn sm" data-sw="${i}" aria-pressed="${i===A.cur}">${SECTIONS[x].name}</button>`).join('')}</div>`:'';
+  P.innerHTML=chips+`<h3>${SECTIONS[s].name}<span>${R?`${right} of ${l.length} right`:`${done} of ${l.length} answered`}</span></h3><div class="grid">${cellsHTML()}</div>${legendHTML()}
+    ${R?'':`<div class="row"><button class="btn sm" id="popReview">Review screen</button></div>`}`;
   P.querySelectorAll('.cell').forEach(b=>b.onclick=()=>go(+b.dataset.q));
   if(!R)$('#popReview').onclick=()=>{closePop();reviewScreen()};
+  P.querySelectorAll('[data-sw]').forEach(b=>b.onclick=e=>{e.stopPropagation();const i=+b.dataset.sw;if(i!==A.cur){closePop();closeCalc(true);switchSec(i)}});
 }
 function closePop(){$('#navPop').hidden=true;$('#navBtn').setAttribute('aria-expanded','false')}
 $('#navBtn').onclick=e=>{e.stopPropagation();const P=$('#navPop');P.hidden=!P.hidden;$('#navBtn').setAttribute('aria-expanded',String(!P.hidden));navPaint()};
 document.addEventListener('click',e=>{if(!$('#navPop').hidden&&!e.target.closest('#navPop,#navBtn'))closePop();if(!$('#toolsMenu').hidden&&!e.target.closest('#toolsMenu,#toolsBtn'))closeTools()});
 function reviewScreen(){
   if(R)return;const s=sec(),S_=st(),l=qlist(),n=l.length,done=l.filter(i=>S_.ans[i]).length,fl=Object.keys(S_.flags).length;
-  coverHTML(`<div class="box" style="--sc:${sv(s)}"><div class="kick">Before you submit</div><h2 class="c">${SECTIONS[s].name}</h2>
+  const nxt=A.cur<A.order.length-1?A.order[A.cur+1]:null,prv=A.cur>0?A.order[A.cur-1]:null;
+  const left=A.order.filter(x=>x!==s&&!A.sec[x].started&&!A.sec[x].ms);
+  coverHTML(`<div class="box" style="--sc:${sv(s)}"><div class="kick">Review</div><h2 class="c">${SECTIONS[s].name}</h2>
     <div class="facts"><span><b>${done}</b> answered</span><span><b>${n-done}</b> blank</span><span><b>${fl}</b> flagged</span></div>
-    <p>Tap a question to go back to it.${n-done?' Blank answers count as wrong, so guess before you submit.':''} You can’t return to this section after submitting.</p>
+    <p>Tap any question to jump to it. Nothing is locked, so you can come back and change answers whenever you want.${n-done?' Blanks count as wrong when you finish.':''}</p>
     <div class="grid">${cellsHTML()}</div>${legendHTML()}
-    <div class="acts"><button class="btn" id="cBack">Back to question ${S_.q}</button><button class="btn pri" id="cSubmit">Submit ${SECTIONS[s].name}</button></div></div>`);
+    <div class="acts" style="margin-top:6px">
+      <button class="btn" id="cBack">Back to question ${S_.q}</button>
+      ${prv?`<button class="btn" id="cPrev">${SECTIONS[prv].name}</button>`:''}
+      ${nxt?`<button class="btn pri" id="cNext">Go to ${SECTIONS[nxt].name}</button>`:''}
+      <button class="btn ${nxt?'':'pri'}" id="cFinish">${A.order.length>1?'Finish test':'Finish and score'}</button></div></div>`);
   $('#cover').querySelectorAll('.cell').forEach(b=>b.onclick=()=>{$('#cover').hidden=true;go(+b.dataset.q)});
   $('#cBack').onclick=()=>{$('#cover').hidden=true};
-  $('#cSubmit').onclick=async()=>{if(await ask(`Submit ${SECTIONS[s].name}?`,'You won’t be able to change these answers.','Submit','Not yet'))submitSection()};
+  if(prv)$('#cPrev').onclick=()=>switchSec(A.cur-1);
+  if(nxt)$('#cNext').onclick=()=>submitSection();
+  $('#cFinish').onclick=async()=>{
+    const msg=left.length?`You haven’t started ${left.map(x=>SECTIONS[x].name).join(', ')}. Those sections will score as blank.`:'Your answers will be scored and saved to your history.';
+    if(await ask('Finish and see your scores?',msg,'Finish','Keep going'))finishNow()};
 }
 document.addEventListener('keydown',e=>{
   if(view!=='test'||!$('#cover').hidden||$('#dlg').open)return;
